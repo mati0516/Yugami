@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Yugami - High-Fidelity Seismic Web Simulation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Three.js (ES module map) -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+    <div id="webgl-container"></div>
+    <div id="ui-layer">
+        <header>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                <h1>YUGAMI <span>v1.0 (REPLAY)</span></h1>
+                <div class="panel" style="width: auto; padding: 10px 20px;">
+                    <span class="label" style="font-size: 0.7rem;">CURRENT DATE</span>
+                    <br>
+                    <span id="date-display" class="value" style="font-size: 1.2rem; min-width: 220px; text-align: left;">2026-01-01</span>
+                </div>
+            </div>
+            <div class="status-bar">
+                <div class="status-item controls" style="flex-direction: row; align-items: center; gap: 10px;">
+                    <button id="btn-speed-down" style="background: rgba(0, 240, 255, 0.1); border: 1px solid #00f0ff; color: #fff; padding: 5px 10px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 4px;">&laquo; SLOW</button>
+                    <button id="btn-playpause" style="background: rgba(0, 240, 255, 0.2); border: 1px solid #00f0ff; color: #fff; padding: 5px 10px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 4px;">⏸ PAUSE</button>
+                    <button id="btn-speed-up" style="background: rgba(0, 240, 255, 0.1); border: 1px solid #00f0ff; color: #fff; padding: 5px 10px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 4px;">FAST &raquo;</button>
+                    <span id="speed-display" style="font-family: 'Orbitron', sans-serif; color: #00f0ff; min-width: 40px; text-align: center;">1.0x</span>
+                    <input type="range" id="time-slider" min="0" max="1000" value="0" style="flex-grow: 1; min-width: 250px; max-width: 600px;">
+                </div>
+            </div>
+        </header>
+        <div class="dashboard">
+            <div class="panel heatmap-panel">
+                <h2>STRAIN HEATMAP</h2>
+                <div class="color-scale">
+                    <div class="scale-bar"></div>
+                    <div class="scale-labels">
+                        <span>0%</span>
+                        <span>50%</span>
+                        <span>100% (CRITICAL)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="panel log-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h2 style="margin: 0;">SEISMIC LOG</h2>
+                    <select id="mag-filter" style="background: rgba(10, 15, 30, 0.8); color: #00f0ff; border: 1px solid #00f0ff; font-family: 'Orbitron', sans-serif; padding: 2px 5px; border-radius: 4px; outline: none; cursor: pointer; font-size: 0.8rem;">
+                        <option value="2.0">M2.0+ (ALL)</option>
+                        <option value="3.0">M3.0+</option>
+                        <option value="4.0">M4.0+</option>
+                        <option value="5.0" selected>M5.0+</option>
+                        <option value="6.0">M6.0+</option>
+                        <option value="7.0">M7.0+</option>
+                    </select>
+                </div>
+                <ul id="event-log"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <div id="tooltip" style="position: absolute; display: none; background: rgba(0, 50, 100, 0.8); border: 1px solid #00f0ff; color: #fff; padding: 5px 10px; border-radius: 4px; pointer-events: none; z-index: 20; font-family: 'Inter', sans-serif; font-size: 0.8rem; text-shadow: 0 0 5px #00f0ff; transform: translate(15px, 15px);">
+        PLATE: <span id="tooltip-value" style="font-family: 'Orbitron', sans-serif; color: #00f0ff;">-</span>
+    </div>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
