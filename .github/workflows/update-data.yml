@@ -1,0 +1,40 @@
+name: Update earthquake data
+
+# 毎月 1・11・21 日 に最新データを取得（≒10日ごと）。
+# 手動実行も可能（workflow_dispatch）。
+on:
+  schedule:
+    - cron: '37 21 1,11,21 * *'  # UTC 21:37 = JST 翌 06:37（毎時0分の混雑を回避）
+  workflow_dispatch:
+
+# earthquakes.json を自動コミットするための書き込み権限
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Fetch latest earthquake data
+        run: node scripts/fetch_data.js
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain data/earthquakes.json)" ]; then
+            git add data/earthquakes.json
+            git commit -m "chore: update earthquake data ($(date -u +%Y-%m-%d))"
+            git push
+            echo "Data updated and pushed."
+          else
+            echo "No changes in earthquake data. Skipping commit."
+          fi
