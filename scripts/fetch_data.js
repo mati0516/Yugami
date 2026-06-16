@@ -6,8 +6,13 @@ const MAX_LAT = 50;
 const MIN_LON = 120;
 const MAX_LON = 150;
 const MIN_MAG = 2.0;
-const START_TIME = '2011-01-01';
+// 実行時点から過去10年間をローリングで取得
 const END_TIME = new Date().toISOString().split('T')[0];
+const START_TIME = (() => {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() - 10);
+    return d.toISOString().split('T')[0];
+})();
 
 async function fetchEarthquakes() {
     let allEvents = [];
